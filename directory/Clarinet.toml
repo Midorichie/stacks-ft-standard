@@ -1,0 +1,10 @@
+[project]
+name = "stacks-ft-standard"
+version = "0.1.0"
+
+[networks.simnet]
+host = "http://127.0.0.1:20443"
+
+[accounts]
+alice = { private_key = "<your-private-key>" }
+bob   = { private_key = "<your-private-key>" }
