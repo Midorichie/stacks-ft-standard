@@ -1,10 +1,84 @@
 [project]
 name = "stacks-ft-standard"
-version = "0.1.0"
+version = "2.0.0"
+description = "Enhanced fungible token with governance functionality"
+authors = ["midorichie"]
+license = "MIT"
+keywords = ["stacks", "clarity", "fungible-token", "governance", "dao"]
 
-[networks.simnet]
-host = "http://127.0.0.1:20443"
+[contracts.fungible-token]
+path = "contracts/fungible-token.clar"
+clarity_version = 2
+epoch = 2.4
 
-[accounts]
-alice = { private_key = "<your-private-key>" }
-bob   = { private_key = "<your-private-key>" }
+[contracts.governance]
+path = "contracts/governance.clar"
+clarity_version = 2
+epoch = 2.4
+depends_on = ["fungible-token"]
+
+[repl]
+costs_version = 2
+parser_version = 2
+
+[repl.analysis]
+passes = ["check_checker"]
+
+[repl.analysis.check_checker]
+strict = true
+trusted_sender = false
+trusted_caller = false
+callee_filter = true
+
+# Test configuration
+[project.requirements]
+clarity_version = ">=2.0.0"
+
+# Network configurations
+[devnet]
+stacks_node_rpc_address = "http://localhost:20443"
+stacks_node_p2p_address = "localhost:20444"
+bitcoin_node_rpc_address = "http://localhost:18443"
+bitcoin_node_rpc_username = "devnet"
+bitcoin_node_rpc_password = "devnet"
+miner_mnemonic = "twice kind fence tip hidden tilt action fragile skin nothing glory cousin green tomorrow spring wrist shed math olympic multiply hip blue scout claw"
+miner_derive_index = 0
+
+[testnet]
+stacks_node_rpc_address = "https://stacks-node-api.testnet.stacks.co"
+
+[mainnet]
+stacks_node_rpc_address = "https://stacks-node-api.mainnet.stacks.co"
+
+# Deployment settings
+[[devnet.deploy]]
+contract_name = "fungible-token"
+path = "contracts/fungible-token.clar"
+deployer = "deployer"
+
+[[devnet.deploy]]
+contract_name = "governance"
+path = "contracts/governance.clar"
+deployer = "deployer"
+depends_on = ["fungible-token"]
+
+[[testnet.deploy]]
+contract_name = "fungible-token"
+path = "contracts/fungible-token.clar"
+deployer = "deployer"
+
+[[testnet.deploy]]
+contract_name = "governance" 
+path = "contracts/governance.clar"
+deployer = "deployer"
+depends_on = ["fungible-token"]
+
+# Testing configuration
+[project.cache_location]
+path = ".cache"
+
+# Cost and fee settings
+[repl.costs]
+large_contract_cost = 1000000
+contract_call_cost = 1000
+runtime_cost = 1000000
